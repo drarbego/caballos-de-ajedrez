@@ -8,10 +8,21 @@
 
 config_version=4
 
+_global_script_classes=[  ]
+_global_script_class_icons={
+
+}
+
 [application]
 
 config/name="Caballos de Ajedrez"
+run/main_scene="res://Board.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=256
+window/size/height=256
 
 [physics]
 
