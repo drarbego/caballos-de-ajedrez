@@ -4,6 +4,7 @@ extends Node2D
 var tile_size = 32
 var board_pos = Vector2.ZERO
 var current_piece = null
+var is_active = true
 
 signal pressed
 
@@ -23,3 +24,9 @@ func _on_pressed():
 
 func _ready():
 	self.position = self.board_pos * tile_size
+
+func consume_tile():
+	self.is_active = false
+
+func _process(delta):
+	$TextureButton.modulate = Color.white if self.is_active else Color.darkgray

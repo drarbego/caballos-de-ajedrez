@@ -19,6 +19,9 @@ func move_to_tile(tile):
 	$Tween.start()
 
 func set_tile(_tile):
+	if self.tile:
+		self.tile.consume_tile()
+
 	self.tile = _tile
 
 func can_move(from, to):

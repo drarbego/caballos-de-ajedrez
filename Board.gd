@@ -25,6 +25,9 @@ func get_tile(pos: Vector2):
 	return get_node("Tiles/" + tile_name)
 
 func on_tile_pressed(tile):
+	if not tile.is_active:
+		print("No ✖")
+		return
 	if self.piece.can_move(self.piece.tile.board_pos, tile.board_pos):
 		print("Sí ✓")
 		tile.set_piece(self.piece)
