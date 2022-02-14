@@ -14,7 +14,7 @@ func init(x, y):
 	return self
 
 func set_piece(piece):
-	piece.position = self.position
+	piece.move_to_tile(self)
 	piece.set_tile(self)
 	self.current_piece = piece
 
