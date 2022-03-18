@@ -4,9 +4,7 @@ const Knight = preload("res://Knight.tscn")
 const Tile = preload("res://Tile.tscn")
 
 var board_tiles = Vector2(8, 8)
-
 var piece = Knight.instance()
-
 
 func _ready():
 	for i in board_tiles.y:
@@ -16,8 +14,8 @@ func _ready():
 			$Tiles.add_child(tile)
 
 	$Pieces.add_child(self.piece)
-	var tile = self.get_tile(Vector2(4, 4))
-	tile.set_piece(self.piece)
+	var initialTile = self.get_tile(Vector2(4, 4))
+	initialTile.set_piece(self.piece)
 
 func get_tile(pos: Vector2):
 	var tile_name = str(pos.x) + "_" + str(pos.y)
