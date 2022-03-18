@@ -1,6 +1,5 @@
 extends Node2D
 
-
 var tile = null
 
 var moves = [
@@ -14,8 +13,8 @@ var moves = [
 	Vector2(-1, -2),
 ]
 
-func move_to_tile(tile):
-	$Tween.interpolate_property(self, "position", self.position, tile.position, 0.3)
+func move_to_tile(destination_tile):
+	$Tween.interpolate_property(self, "position", self.position, destination_tile.position, 0.3)
 	$Tween.start()
 
 func set_tile(_tile):
