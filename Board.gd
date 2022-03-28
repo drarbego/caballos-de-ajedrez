@@ -5,11 +5,10 @@ const Tile = preload("res://Tile.tscn")
 
 var board_tiles = Vector2(8, 8)
 
-var black_knight = Knight.instance().init(Color.darkgray)
-var white_knight = Knight.instance().init(Color.white)
+var black_knight = null
+var white_knight = null
 
-var current_piece = black_knight
-
+var current_piece = null
 
 func _ready():
 	for i in board_tiles.y:
@@ -18,14 +17,21 @@ func _ready():
 			tile.connect("pressed", self, "on_tile_pressed")
 			$Tiles.add_child(tile)
 
+	var tile_black = self.get_tile(Vector2(0, 4))
+	self.black_knight = Knight.instance().init(tile_black, Color.darkgray)
 	$Pieces.add_child(self.black_knight)
-	var tile_black = self.get_tile(Vector2(4, 5))
+	self.black_knight.set_tile(tile_black)
 	tile_black.set_piece(self.black_knight)
-	self.black_knight.set_active(true)
 
+
+	var tile_white = self.get_tile(Vector2(0, 3))
+	self.white_knight = Knight.instance().init(tile_white, Color.white)
 	$Pieces.add_child(self.white_knight)
-	var tile_white = self.get_tile(Vector2(4, 4))
+	self.white_knight.set_tile(tile_white)
 	tile_white.set_piece(self.white_knight)
+
+	self.current_piece = self.black_knight
+	self.black_knight.set_active(true)
 
 func get_tile(pos: Vector2):
 	var tile_name = str(pos.x) + "_" + str(pos.y)

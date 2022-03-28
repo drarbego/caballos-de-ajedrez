@@ -1,7 +1,7 @@
 extends Node2D
 
 
-var tile_size = 32
+var tile_size = 64
 var board_pos = Vector2.ZERO
 var current_piece = null
 var is_active = true
