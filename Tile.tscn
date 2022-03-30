@@ -12,4 +12,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Content" type="Position2D" parent="."]
+position = Vector2( 32, 32 )
+z_index = 2
+
 [connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]

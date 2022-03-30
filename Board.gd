@@ -2,6 +2,8 @@ extends Node2D
 
 const Knight = preload("res://Knight.tscn")
 const Tile = preload("res://Tile.tscn")
+const Switch = preload("res://Switch.tscn")
+const Hunter = preload("res://Hunter.tscn")
 
 var board_tiles = Vector2(8, 8)
 
@@ -17,21 +19,7 @@ func _ready():
 			tile.connect("pressed", self, "on_tile_pressed")
 			$Tiles.add_child(tile)
 
-	var tile_black = self.get_tile(Vector2(0, 4))
-	self.black_knight = Knight.instance().init(tile_black, Color.darkgray)
-	$Pieces.add_child(self.black_knight)
-	self.black_knight.set_tile(tile_black)
-	tile_black.set_piece(self.black_knight)
-
-
-	var tile_white = self.get_tile(Vector2(0, 3))
-	self.white_knight = Knight.instance().init(tile_white, Color.white)
-	$Pieces.add_child(self.white_knight)
-	self.white_knight.set_tile(tile_white)
-	tile_white.set_piece(self.white_knight)
-
-	self.current_piece = self.black_knight
-	self.black_knight.set_active(true)
+	self.initialize_board()
 
 func get_tile(pos: Vector2):
 	var tile_name = str(pos.x) + "_" + str(pos.y)
@@ -52,3 +40,28 @@ func next_piece():
 	self.current_piece.set_active(false)
 	self.current_piece = self.black_knight if self.current_piece == self.white_knight else self.white_knight
 	self.current_piece.set_active(true)
+
+func initialize_board():
+	var tile_black = self.get_tile(Vector2(0, 4))
+	self.black_knight = Knight.instance().init(tile_black, Color.darkgray)
+	$Pieces.add_child(self.black_knight)
+	self.black_knight.set_tile(tile_black)
+	tile_black.set_piece(self.black_knight)
+
+
+	var tile_white = self.get_tile(Vector2(0, 3))
+	self.white_knight = Knight.instance().init(tile_white, Color.white)
+	$Pieces.add_child(self.white_knight)
+	self.white_knight.set_tile(tile_white)
+	tile_white.set_piece(self.white_knight)
+
+	self.current_piece = self.black_knight
+	self.black_knight.set_active(true)
+
+	var tile = self.get_tile(Vector2(3, 3))
+	var switch = Switch.instance()
+	tile.set_content(switch)
+
+	tile = self.get_tile(Vector2(4, 3))
+	var hunter = Hunter.instance()
+	tile.set_content(hunter)

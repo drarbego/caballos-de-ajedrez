@@ -30,3 +30,9 @@ func consume_tile():
 
 func _process(delta):
 	$TextureButton.modulate = Color.white if self.is_active else Color.darkgray
+
+func set_content(node_content):
+	for child in $Content.get_children():
+		child.queue_free()
+
+	$Content.add_child(node_content)
