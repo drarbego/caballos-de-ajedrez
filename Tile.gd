@@ -19,6 +19,9 @@ func set_piece(piece):
 	piece.set_tile(self)
 	self.current_piece = piece
 
+	for child in $Content.get_children():
+		child.on_piece_landed(piece)
+
 func _on_pressed():
 	emit_signal("pressed", self)
 
@@ -36,3 +39,6 @@ func set_content(node_content):
 		child.queue_free()
 
 	$Content.add_child(node_content)
+
+func toggle():
+	print("toggle")

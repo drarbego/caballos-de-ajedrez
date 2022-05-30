@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://current_piece_particles.tres" type="Material" id=1]
+[ext_resource path="res://Piece.gd" type="Script" id=2]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Particles2D" type="Particles2D" parent="."]
+amount = 16
+process_material = ExtResource( 1 )
+script = ExtResource( 2 )

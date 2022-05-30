@@ -1,14 +1,18 @@
 extends Node2D
 
 const Knight = preload("res://Knight.tscn")
+const Traveler = preload("res://Traveler.tscn")
 const Tile = preload("res://Tile.tscn")
 const Switch = preload("res://Switch.tscn")
 const Hunter = preload("res://Hunter.tscn")
 
 var board_tiles = Vector2(8, 8)
 
-var black_knight = null
-var white_knight = null
+var knight = null
+var traveler = null
+
+# make a list of enemies per board/level
+var hunter = null
 
 var current_piece = null
 
@@ -35,33 +39,52 @@ func on_tile_pressed(tile):
 
 	tile.set_piece(self.current_piece)
 	self.next_piece()
+	self.move_enemies()
 
 func next_piece():
 	self.current_piece.set_active(false)
-	self.current_piece = self.black_knight if self.current_piece == self.white_knight else self.white_knight
+	self.current_piece = self.traveler if self.current_piece == self.knight else self.knight
 	self.current_piece.set_active(true)
 
+func move_enemies():
+	for enemy in $Enemies.get_children():
+		var dir = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT][randi() % 4]
+		var next_tile = self.get_tile(enemy.tile.board_pos + dir)
+
+		if not next_tile:
+			continue
+			
+		if not next_tile.is_active:
+			continue
+
+		if not self.current_piece.can_move(enemy.tile.board_pos, next_tile.board_pos):
+			return
+
+		next_tile.set_piece(enemy)
+
 func initialize_board():
-	var tile_black = self.get_tile(Vector2(0, 4))
-	self.black_knight = Knight.instance().init(tile_black, Color.darkgray)
-	$Pieces.add_child(self.black_knight)
-	self.black_knight.set_tile(tile_black)
-	tile_black.set_piece(self.black_knight)
+	var tile_knight = self.get_tile(Vector2(0, 4))
+	self.knight = Knight.instance().init(tile_knight, Color.darkgray)
+	$Pieces.add_child(self.knight)
+	self.knight.set_tile(tile_knight)
+	tile_knight.set_piece(self.knight)
 
 
-	var tile_white = self.get_tile(Vector2(0, 3))
-	self.white_knight = Knight.instance().init(tile_white, Color.white)
-	$Pieces.add_child(self.white_knight)
-	self.white_knight.set_tile(tile_white)
-	tile_white.set_piece(self.white_knight)
+	var tile_traveler = self.get_tile(Vector2(0, 3))
+	self.traveler = Traveler.instance().init(tile_traveler, Color.white)
+	$Pieces.add_child(self.traveler)
+	self.traveler.set_tile(tile_traveler)
+	tile_traveler.set_piece(self.traveler)
 
-	self.current_piece = self.black_knight
-	self.black_knight.set_active(true)
+	self.current_piece = self.knight
+	self.knight.set_active(true)
 
 	var tile = self.get_tile(Vector2(3, 3))
 	var switch = Switch.instance()
 	tile.set_content(switch)
 
-	tile = self.get_tile(Vector2(4, 3))
-	var hunter = Hunter.instance()
-	tile.set_content(hunter)
+	var tile_hunter = self.get_tile(Vector2(4, 3))
+	self.hunter = Hunter.instance().init(tile_hunter, Color.white)
+	$Enemies.add_child(self.hunter)
+	self.hunter.set_tile(tile_hunter)
+	tile_hunter.set_piece(self.hunter)
