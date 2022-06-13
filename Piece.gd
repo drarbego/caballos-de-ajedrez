@@ -4,12 +4,14 @@ class_name Piece
 
 
 var tile = null
+var consumes_tiles = true
 export var moves := [Vector2.ZERO]
 
-func init(_tile, color):
+func init(_tile, color, _consumes_tiles):
 	self.tile = _tile
 	$Sprite.modulate = color
 	$Particles2D.emitting = false
+	self.consumes_tiles = _consumes_tiles
 
 	return self
 
@@ -19,7 +21,8 @@ func move_to_tile(new_tile):
 
 func set_tile(_tile):
 	self.tile = _tile
-	self.tile.consume_tile()
+	if self.consumes_tiles:
+		self.tile.consume_tile()
 
 func set_active(active):
 	$Particles2D.emitting = active
