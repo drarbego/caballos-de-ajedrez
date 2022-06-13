@@ -66,18 +66,23 @@ func move_enemies():
 		next_tile.set_piece(enemy)
 
 func initialize_board():
-	var tile_knight = self.get_tile(Vector2(0, 4))
-	self.knight = Knight.instance().init(tile_knight, Color.darkgray, true)
-	$Pieces.add_child(self.knight)
-	self.knight.set_tile(tile_knight)
-	tile_knight.set_piece(self.knight)
-
-
-	var tile_traveler = self.get_tile(Vector2(0, 3))
-	self.traveler = Traveler.instance().init(tile_traveler, Color.white, false)
-	$Pieces.add_child(self.traveler)
-	self.traveler.set_tile(tile_traveler)
-	tile_traveler.set_piece(self.traveler)
+	# read file
+	var file = File.new()
+	file.open("res://test_map.txt", File.READ)
+	var y = 0
+	while file.get_position() < file.get_len():
+		var x = 0
+		for c in file.get_line():
+			print(c)
+			match c:
+				"K":
+					self._initialize_knight(Vector2(x, y))
+				"T":
+					self._initialize_traveler(Vector2(x, y))
+				"E":
+					self._initialize_enemy(Vector2(x, y))
+			x += 1
+		y += 1
 
 	self.current_piece = self.knight
 	self.knight.set_active(true)
@@ -86,7 +91,23 @@ func initialize_board():
 	var switch = Switch.instance()
 	tile.set_content(switch)
 
-	var tile_hunter = self.get_tile(Vector2(4, 3))
+
+func _initialize_knight(pos):
+	var tile_knight = self.get_tile(pos)
+	self.knight = Knight.instance().init(tile_knight, Color.darkgray, true)
+	$Pieces.add_child(self.knight)
+	self.knight.set_tile(tile_knight)
+	tile_knight.set_piece(self.knight)
+
+func _initialize_traveler(pos):
+	var tile_traveler = self.get_tile(pos)
+	self.traveler = Traveler.instance().init(tile_traveler, Color.white, false)
+	$Pieces.add_child(self.traveler)
+	self.traveler.set_tile(tile_traveler)
+	tile_traveler.set_piece(self.traveler)
+
+func _initialize_enemy(pos):
+	var tile_hunter = self.get_tile(pos)
 	self.hunter = Hunter.instance().init(tile_hunter, Color.white, false)
 	$Enemies.add_child(self.hunter)
 	self.hunter.set_tile(tile_hunter)
