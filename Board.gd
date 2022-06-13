@@ -48,7 +48,10 @@ func next_piece():
 
 func move_enemies():
 	for enemy in $Enemies.get_children():
-		var dir = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT][randi() % 4]
+		# follow traveler
+		var dir = (self.traveler.tile.board_pos - enemy.tile.board_pos).normalized().round()
+		if abs(dir.x) == 1 and abs(dir.y) == 1:
+			dir.y = 0
 		var next_tile = self.get_tile(enemy.tile.board_pos + dir)
 
 		if not next_tile:
@@ -64,14 +67,14 @@ func move_enemies():
 
 func initialize_board():
 	var tile_knight = self.get_tile(Vector2(0, 4))
-	self.knight = Knight.instance().init(tile_knight, Color.darkgray)
+	self.knight = Knight.instance().init(tile_knight, Color.darkgray, true)
 	$Pieces.add_child(self.knight)
 	self.knight.set_tile(tile_knight)
 	tile_knight.set_piece(self.knight)
 
 
 	var tile_traveler = self.get_tile(Vector2(0, 3))
-	self.traveler = Traveler.instance().init(tile_traveler, Color.white)
+	self.traveler = Traveler.instance().init(tile_traveler, Color.white, false)
 	$Pieces.add_child(self.traveler)
 	self.traveler.set_tile(tile_traveler)
 	tile_traveler.set_piece(self.traveler)
@@ -84,7 +87,7 @@ func initialize_board():
 	tile.set_content(switch)
 
 	var tile_hunter = self.get_tile(Vector2(4, 3))
-	self.hunter = Hunter.instance().init(tile_hunter, Color.white)
+	self.hunter = Hunter.instance().init(tile_hunter, Color.white, false)
 	$Enemies.add_child(self.hunter)
 	self.hunter.set_tile(tile_hunter)
 	tile_hunter.set_piece(self.hunter)
