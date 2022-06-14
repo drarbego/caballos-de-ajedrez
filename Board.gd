@@ -8,13 +8,12 @@ const Hunter = preload("res://Hunter.tscn")
 
 var board_tiles = Vector2(8, 8)
 
-var knight = null
-var traveler = null
+var current_piece_index = 0
+var current_piece = null
 
 # make a list of enemies per board/level
 var hunter = null
 
-var current_piece = null
 
 func _ready():
 	for i in board_tiles.y:
@@ -43,13 +42,15 @@ func on_tile_pressed(tile):
 
 func next_piece():
 	self.current_piece.set_active(false)
-	self.current_piece = self.traveler if self.current_piece == self.knight else self.knight
+	self.current_piece_index = (self.current_piece_index + 1) % $Pieces.get_child_count()
+	self.current_piece = $Pieces.get_child(self.current_piece_index)
 	self.current_piece.set_active(true)
 
 func move_enemies():
+	var traveler = $Pieces.get_child(0) # fix this
 	for enemy in $Enemies.get_children():
 		# follow traveler
-		var dir = (self.traveler.tile.board_pos - enemy.tile.board_pos).normalized().round()
+		var dir = (traveler.tile.board_pos - enemy.tile.board_pos).normalized().round()
 		if abs(dir.x) == 1 and abs(dir.y) == 1:
 			dir.y = 0
 		var next_tile = self.get_tile(enemy.tile.board_pos + dir)
@@ -73,42 +74,23 @@ func initialize_board():
 	while file.get_position() < file.get_len():
 		var x = 0
 		for c in file.get_line():
-			print(c)
 			match c:
 				"K":
-					self._initialize_knight(Vector2(x, y))
+					self.initialize_piece(Vector2(x, y), Knight, true, true)
 				"T":
-					self._initialize_traveler(Vector2(x, y))
+					self.initialize_piece(Vector2(x, y), Traveler, false, true)
 				"E":
-					self._initialize_enemy(Vector2(x, y))
+					self.initialize_piece(Vector2(x, y), Hunter, false, false)
 			x += 1
 		y += 1
 
-	self.current_piece = self.knight
-	self.knight.set_active(true)
+	self.current_piece = $Pieces.get_child(self.current_piece_index)
+	self.current_piece.set_active(true)
 
-	var tile = self.get_tile(Vector2(3, 3))
-	var switch = Switch.instance()
-	tile.set_content(switch)
-
-
-func _initialize_knight(pos):
-	var tile_knight = self.get_tile(pos)
-	self.knight = Knight.instance().init(tile_knight, Color.darkgray, true)
-	$Pieces.add_child(self.knight)
-	self.knight.set_tile(tile_knight)
-	tile_knight.set_piece(self.knight)
-
-func _initialize_traveler(pos):
-	var tile_traveler = self.get_tile(pos)
-	self.traveler = Traveler.instance().init(tile_traveler, Color.white, false)
-	$Pieces.add_child(self.traveler)
-	self.traveler.set_tile(tile_traveler)
-	tile_traveler.set_piece(self.traveler)
-
-func _initialize_enemy(pos):
-	var tile_hunter = self.get_tile(pos)
-	self.hunter = Hunter.instance().init(tile_hunter, Color.white, false)
-	$Enemies.add_child(self.hunter)
-	self.hunter.set_tile(tile_hunter)
-	tile_hunter.set_piece(self.hunter)
+func initialize_piece(pos, piece_class, consumes_tiles, is_controllable):
+	var tile = self.get_tile(pos) 
+	var piece = piece_class.instance().init(tile, consumes_tiles)
+	var container = $Pieces if is_controllable else $Enemies
+	container.add_child(piece)
+	piece.set_tile(tile)
+	tile.set_piece(piece)

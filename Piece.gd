@@ -7,9 +7,8 @@ var tile = null
 var consumes_tiles = true
 export var moves := [Vector2.ZERO]
 
-func init(_tile, color, _consumes_tiles):
+func init(_tile,  _consumes_tiles):
 	self.tile = _tile
-	$Sprite.modulate = color
 	$Particles2D.emitting = false
 	self.consumes_tiles = _consumes_tiles
 
