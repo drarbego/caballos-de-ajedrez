@@ -7,7 +7,8 @@
 [node name="Knight" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 moves = [ Vector2( 2, -1 ), Vector2( 2, 1 ), Vector2( -2, -1 ), Vector2( -2, 1 ), Vector2( 1, -2 ), Vector2( 1, 2 ), Vector2( -1, -2 ), Vector2( -1, 2 ) ]
+move_time = 0.25
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )
-centered = false
+offset = Vector2( 32, 32 )

@@ -6,6 +6,7 @@ class_name Piece
 var tile = null
 var consumes_tiles = true
 export var moves := [Vector2.ZERO]
+export var move_time := 0.5
 
 func init(_tile,  _consumes_tiles):
 	self.tile = _tile
@@ -15,7 +16,7 @@ func init(_tile,  _consumes_tiles):
 	return self
 
 func move_to_tile(new_tile):
-	$Tween.interpolate_property(self, "position", self.position, new_tile.position, 0.3)
+	$Tween.interpolate_property(self, "position", self.position, new_tile.position, move_time)
 	$Tween.start()
 
 func set_tile(_tile):

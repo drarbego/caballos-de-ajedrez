@@ -38,8 +38,12 @@ func on_tile_pressed(tile):
 
 	self.current_piece.tile.set_piece(null)
 	tile.set_piece(self.current_piece)
-	self.next_piece()
+	$MoveTimer.set_wait_time(self.current_piece.move_time)
+	$MoveTimer.start()
+
+func _on_MoveTimer_timeout():
 	self.move_enemies()
+	self.next_piece()
 
 func next_piece():
 	self.current_piece.set_active(false)
