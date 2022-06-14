@@ -15,9 +15,13 @@ func init(x, y):
 	return self
 
 func set_piece(piece):
+	self.current_piece = piece
+
+	if not piece:
+		return
+
 	piece.move_to_tile(self)
 	piece.set_tile(self)
-	self.current_piece = piece
 
 	for child in $Content.get_children():
 		child.on_piece_landed(piece)

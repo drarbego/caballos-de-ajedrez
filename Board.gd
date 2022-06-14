@@ -36,6 +36,7 @@ func on_tile_pressed(tile):
 	if not self.current_piece.can_move(self.current_piece.tile.board_pos, tile.board_pos):
 		return
 
+	self.current_piece.tile.set_piece(null)
 	tile.set_piece(self.current_piece)
 	self.next_piece()
 	self.move_enemies()
@@ -61,8 +62,8 @@ func move_enemies():
 		if not next_tile.is_active:
 			continue
 
-		if not self.current_piece.can_move(enemy.tile.board_pos, next_tile.board_pos):
-			return
+		if not enemy.can_move(enemy.tile.board_pos, next_tile.board_pos):
+			continue
 
 		next_tile.set_piece(enemy)
 
