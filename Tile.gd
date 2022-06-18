@@ -15,11 +15,17 @@ func init(x, y):
 	return self
 
 func set_piece(piece):
+	if self.current_piece and piece:
+		print(self.current_piece)
+		if self.current_piece.has_method("on_clash"):
+			self.current_piece.on_clash(piece)
+
 	self.current_piece = piece
 
 	if not piece:
 		return
 
+	piece.tile.set_piece(null)
 	piece.move_to_tile(self)
 	piece.set_tile(self)
 
@@ -37,6 +43,7 @@ func consume_tile():
 
 func _process(delta):
 	$TextureButton.modulate = Color.white if self.is_active else Color.darkgray
+	$Label.set_text(str(self.current_piece) if self.current_piece else "_")
 
 func set_content(node_content):
 	for child in $Content.get_children():
@@ -45,4 +52,4 @@ func set_content(node_content):
 	$Content.add_child(node_content)
 
 func toggle():
-	print("toggle")
+	pass

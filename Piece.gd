@@ -5,10 +5,13 @@ class_name Piece
 
 var tile = null
 var consumes_tiles = true
+var attacks = false
+var board = null
 export var moves := [Vector2.ZERO]
 export var move_time := 0.5
 
-func init(_tile,  _consumes_tiles):
+func init(_board, _tile,  _consumes_tiles):
+	self.board = _board
 	self.tile = _tile
 	$Particles2D.emitting = false
 	self.consumes_tiles = _consumes_tiles
@@ -37,4 +40,7 @@ func can_move(from, to):
 	return false
 
 func play_animation(animation_name: String):
+	pass
+
+func on_clash(piece):
 	pass

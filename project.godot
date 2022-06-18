@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Piece",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://Enemy.gd"
+}, {
 "base": "Node2D",
 "class": "Piece",
 "language": "GDScript",
 "path": "res://Piece.gd"
 } ]
 _global_script_class_icons={
+"Enemy": "",
 "Piece": ""
 }
 

@@ -36,13 +36,17 @@ func on_tile_pressed(tile):
 	if not self.current_piece.can_move(self.current_piece.tile.board_pos, tile.board_pos):
 		return
 
-	self.current_piece.tile.set_piece(null)
+	if tile.current_piece and not self.current_piece.attacks:
+		return
+
 	tile.set_piece(self.current_piece)
+
 	$MoveTimer.set_wait_time(self.current_piece.move_time)
 	$MoveTimer.start()
 
 func _on_MoveTimer_timeout():
 	self.move_enemies()
+	self.update_enemies_direction()
 	self.next_piece()
 
 func next_piece():
@@ -51,14 +55,19 @@ func next_piece():
 	self.current_piece = $Pieces.get_child(self.current_piece_index)
 	self.current_piece.set_active(true)
 
-func move_enemies():
+func update_enemies_direction():
 	var traveler = $Pieces.get_child(0) # fix this
 	for enemy in $Enemies.get_children():
 		# follow traveler
 		var dir = (traveler.tile.board_pos - enemy.tile.board_pos).normalized().round()
 		if abs(dir.x) == 1 and abs(dir.y) == 1:
 			dir.y = 0
-		var next_tile = self.get_tile(enemy.tile.board_pos + dir)
+		enemy.set_dir(dir)
+
+
+func move_enemies():
+	for enemy in $Enemies.get_children():
+		var next_tile = self.get_tile(enemy.tile.board_pos + enemy.dir)
 
 		if not next_tile:
 			continue
@@ -88,14 +97,19 @@ func initialize_board():
 					self.initialize_piece(Vector2(x, y), Hunter, false, false)
 			x += 1
 		y += 1
+	self.update_enemies_direction()
 
 	self.current_piece = $Pieces.get_child(self.current_piece_index)
 	self.current_piece.set_active(true)
 
 func initialize_piece(pos, piece_class, consumes_tiles, is_controllable):
 	var tile = self.get_tile(pos) 
-	var piece = piece_class.instance().init(tile, consumes_tiles)
+	var piece = piece_class.instance().init(self, tile, consumes_tiles)
 	var container = $Pieces if is_controllable else $Enemies
 	container.add_child(piece)
-	piece.set_tile(tile)
 	tile.set_piece(piece)
+	tile.current_piece = piece # fix this hack
+
+func game_over():
+	for tile in $Tiles.get_children():
+		tile.is_active = false
