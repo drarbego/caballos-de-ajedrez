@@ -1,44 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Piece.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Traveler.gd" type="Script" id=2]
-[ext_resource path="res://traveler.png" type="Texture" id=3]
-
-[sub_resource type="Animation" id=1]
-resource_name = "active"
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 0
-tracks/0/loop_wrap = false
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
-"update": 0,
-"values": [ 0, 1, 2, 3, 5, 5, 7, 7, 9 ]
-}
-
-[sub_resource type="Animation" id=2]
-resource_name = "idle"
-loop = true
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 0
-tracks/0/loop_wrap = false
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 0 ]
-}
+[ext_resource path="res://PlayablePiece.tscn" type="PackedScene" id=1]
+[ext_resource path="res://animations/traveler/idle.tres" type="Animation" id=2]
+[ext_resource path="res://spritesheets/traveler.png" type="Texture" id=3]
+[ext_resource path="res://animations/traveler/active.tres" type="Animation" id=4]
 
 [node name="Traveler" instance=ExtResource( 1 )]
-script = ExtResource( 2 )
-moves = [ Vector2( -1, 0 ), Vector2( 1, 0 ), Vector2( 0, -1 ), Vector2( 0, 1 ) ]
+moves = [ Vector2( 1, 0 ), Vector2( -1, 0 ), Vector2( 0, -1 ), Vector2( 0, 1 ) ]
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )
@@ -46,5 +14,5 @@ centered = false
 vframes = 10
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3"]
-anims/active = SubResource( 1 )
-anims/idle = SubResource( 2 )
+anims/active = ExtResource( 4 )
+anims/idle = ExtResource( 2 )

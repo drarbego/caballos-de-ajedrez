@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "Piece",
 "language": "GDScript",
 "path": "res://Piece.gd"
+}, {
+"base": "Piece",
+"class": "PlayablePiece",
+"language": "GDScript",
+"path": "res://PlayablePiece.gd"
 } ]
 _global_script_class_icons={
 "Enemy": "",
-"Piece": ""
+"Piece": "",
+"PlayablePiece": ""
 }
 
 [application]
@@ -34,6 +40,10 @@ config/icon="res://icon.png"
 
 window/size/width=512
 window/size/height=768
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [physics]
 

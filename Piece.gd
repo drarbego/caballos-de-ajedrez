@@ -32,7 +32,11 @@ func set_active(active):
 	var animation_name = "active" if active else "idle"
 	self.play_animation(animation_name)
 
-func can_move(from, to):
+func can_move(to):
+	if not self.tile:
+		return false
+
+	var from = self.tile.board_pos
 	for move in self.moves:
 		if from + move == to:
 			return true
