@@ -5,10 +5,10 @@ class_name Piece
 
 var tile = null
 var consumes_tiles = true
-var attacks = false
 var board = null
 export var moves := [Vector2.ZERO]
 export var move_time := 0.5
+export var attacks = false
 
 func init(_board, _tile,  _consumes_tiles):
 	self.board = _board

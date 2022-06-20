@@ -13,9 +13,9 @@ func set_dir(new_dir: Vector2):
 
 func _draw():
 	var tip = ORIGIN + (self.dir * 64)
-	draw_line(ORIGIN, tip, Color.green, 3.0)
+	draw_line(ORIGIN, tip, Color.black, 3.0)
 	var left = tip + ((ORIGIN - tip).normalized() * 16).rotated(deg2rad(30))
-	draw_line(tip, left, Color.blue, 3.0)
+	draw_line(tip, left, Color.red, 3.0)
 	var right = tip + ((ORIGIN - tip).normalized() * 20).rotated(deg2rad(-30))
 	draw_line(tip, right, Color.red, 3.0)
 

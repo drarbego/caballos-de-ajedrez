@@ -18,7 +18,6 @@ func init(_board, x, y):
 
 func set_piece(piece):
 	if self.current_piece and piece:
-		print(self.current_piece)
 		if self.current_piece.has_method("on_clash"):
 			self.current_piece.on_clash(piece)
 

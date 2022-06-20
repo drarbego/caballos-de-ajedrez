@@ -27,12 +27,18 @@ func get_tile(pos: Vector2):
 	return get_node("Tiles/" + tile_name)
 
 func next_state(selected_tile):
-	if self.current_piece and not selected_tile.current_piece and self.current_piece.can_move(selected_tile.board_pos):
-		selected_tile.set_piece(self.current_piece)
-		self.current_piece.tile.select_piece()
-		self.move_enemies()
-		self.update_enemies_direction()
-		return
+	if self.current_piece and self.current_piece.can_move(selected_tile.board_pos):
+		if not selected_tile.current_piece:
+			selected_tile.set_piece(self.current_piece)
+			self.current_piece.tile.select_piece()
+			$MoveTimer.set_wait_time(self.current_piece.move_time)
+			$MoveTimer.start()
+		elif selected_tile.current_piece is Enemy and self.current_piece.attacks:
+				selected_tile.current_piece.on_clash(self.current_piece)
+				selected_tile.set_piece(self.current_piece)
+				self.current_piece.tile.select_piece()
+				$MoveTimer.set_wait_time(self.current_piece.move_time)
+				$MoveTimer.start()
 
 	if selected_tile.current_piece and selected_tile.current_piece is PlayablePiece:
 		selected_tile.select_piece()
@@ -60,19 +66,24 @@ func update_enemies_direction():
 
 func move_enemies():
 	self.is_player_turn = false
-	self.set_tiles_active(true)
 	for enemy in $Enemies.get_children():
+		if enemy.is_queued_for_deletion():
+			continue
+
 		var next_tile = self.get_tile(enemy.tile.board_pos + enemy.dir)
 
 		if not next_tile:
 			continue
 			
-		if not next_tile.is_active:
-			continue
-
 		if not enemy.can_move(next_tile.board_pos):
 			continue
 
+		if next_tile.current_piece and next_tile.current_piece is Enemy:
+			continue
+
+		if next_tile.current_piece and next_tile.current_piece is PlayablePiece:
+			next_tile.current_piece.on_clash(enemy)
+			 
 		next_tile.set_piece(enemy)
 	self.start_player_turn()
 

@@ -1,4 +1,6 @@
 extends Enemy
 
 func on_clash(_piece):
-    self.queue_free()
+	if self.tile:
+		self.tile.set_piece(null)
+	self.queue_free()
