@@ -10,6 +10,9 @@ export var moves := [Vector2.ZERO]
 export var move_time := 0.5
 export var attacks = false
 
+# state
+var is_moving = false
+
 func init(_board, _tile,  _consumes_tiles):
 	self.board = _board
 	self.tile = _tile
@@ -19,8 +22,15 @@ func init(_board, _tile,  _consumes_tiles):
 	return self
 
 func move_to_tile(new_tile):
+	self.is_moving = true
+	$AnimationPlayer.play("walk")
 	$Tween.interpolate_property(self, "position", self.position, new_tile.position, move_time)
+	$Tween.interpolate_callback(self,  move_time, "stop_moving")
 	$Tween.start()
+
+func stop_moving():
+	self.is_moving = false
+	$AnimationPlayer.play("idle")
 
 func set_tile(_tile):
 	self.tile = _tile
@@ -29,8 +39,7 @@ func set_tile(_tile):
 
 func set_active(active):
 	$Particles2D.emitting = active
-	var animation_name = "active" if active else "idle"
-	self.play_animation(animation_name)
+	print("set active")
 
 func can_move(to):
 	if not self.tile:
@@ -42,9 +51,6 @@ func can_move(to):
 			return true
 
 	return false
-
-func play_animation(animation_name: String):
-	pass
 
 func on_clash(piece):
 	pass

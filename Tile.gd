@@ -7,8 +7,6 @@ var board = null
 var current_piece = null
 var is_active = true
 
-signal pressed(tile)
-
 func init(_board, x, y):
 	self.board = _board
 	self.board_pos = Vector2(x, y)
@@ -37,12 +35,13 @@ func _on_pressed():
 	self.board.next_state(self)
 
 func select_piece():
+	# makes available tiles for piece active
 	if not self.current_piece:
 		return
 
-	self.board.set_tiles_active(false)
-	self.board.set_pieces_active(false)
-	self.current_piece.set_active(true)
+	# self.board.set_tiles_active(false)
+	# self.board.set_pieces_active(false)
+	# self.current_piece.set_active(true)
 
 	for move in self.current_piece.moves:
 		var tile = self.board.get_tile(self.board_pos + move)

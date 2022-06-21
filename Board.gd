@@ -33,26 +33,23 @@ func next_state(selected_tile):
 			self.current_piece.tile.select_piece()
 			$MoveTimer.set_wait_time(self.current_piece.move_time)
 			$MoveTimer.start()
+			self.set_tiles_active(false)
 		elif selected_tile.current_piece is Enemy and self.current_piece.attacks:
 				selected_tile.current_piece.on_clash(self.current_piece)
 				selected_tile.set_piece(self.current_piece)
 				self.current_piece.tile.select_piece()
 				$MoveTimer.set_wait_time(self.current_piece.move_time)
 				$MoveTimer.start()
+				self.set_tiles_active(false)
 
 	if selected_tile.current_piece and selected_tile.current_piece is PlayablePiece:
+		self.set_tiles_active(false)
 		selected_tile.select_piece()
 
 func _on_MoveTimer_timeout():
 	self.move_enemies()
-	self.update_enemies_direction()
-	self.start_player_turn()
-
-func start_player_turn():
-	self.is_player_turn = true
-	self.current_piece = null
-	self.set_pieces_active(true)
 	self.set_tiles_active(false)
+	self.update_enemies_direction()
 
 func update_enemies_direction():
 	var traveler = $Pieces.get_child(0) # fix this
@@ -70,6 +67,7 @@ func move_enemies():
 		if enemy.is_queued_for_deletion():
 			continue
 
+		enemy.tile.select_piece()
 		var next_tile = self.get_tile(enemy.tile.board_pos + enemy.dir)
 
 		if not next_tile:
@@ -85,7 +83,6 @@ func move_enemies():
 			next_tile.current_piece.on_clash(enemy)
 			 
 		next_tile.set_piece(enemy)
-	self.start_player_turn()
 
 func initialize_board():
 	# read file
@@ -106,7 +103,7 @@ func initialize_board():
 		y += 1
 
 	self.update_enemies_direction()
-	self.start_player_turn()
+	self.set_tiles_active(false)
 
 func initialize_piece(pos, piece_class, consumes_tiles): # fix consumes_tiles
 	var tile = self.get_tile(pos) 

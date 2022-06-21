@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://PlayablePiece.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Knight.gd" type="Script" id=2]
-[ext_resource path="res://knight.png" type="Texture" id=3]
+[ext_resource path="res://spritesheets/Fox/Fox Sprite Sheet 28x20.png" type="Texture" id=3]
+[ext_resource path="res://animations/fox/idle.tres" type="Animation" id=4]
+[ext_resource path="res://animations/fox/walk.tres" type="Animation" id=5]
+[ext_resource path="res://Piece.gd" type="Script" id=6]
 
 [node name="Knight" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
@@ -10,4 +13,13 @@ moves = [ Vector2( -2, 1 ), Vector2( -2, -1 ), Vector2( 2, -1 ), Vector2( 2, 1 )
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )
-offset = Vector2( 32, 32 )
+centered = false
+hframes = 7
+vframes = 6
+
+[node name="Particles2D" parent="." index="2"]
+script = ExtResource( 6 )
+
+[node name="AnimationPlayer" parent="." index="3"]
+anims/idle = ExtResource( 4 )
+anims/walk = ExtResource( 5 )

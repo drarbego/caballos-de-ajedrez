@@ -5,3 +5,6 @@
 + git clone this repository
 + open godot and click on *import*
 + select the file `project.godot` from this repository
+
+#### Sprites by Penusbmic
+[itch.io profile](https://penusbmic.itch.io/)
