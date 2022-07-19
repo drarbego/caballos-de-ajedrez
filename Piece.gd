@@ -1,7 +1,8 @@
 extends Node2D
-
 class_name Piece
 
+var ActiveMaterial = preload("res://materials/active.tres")
+var SelectableMaterial = preload("res://materials/selectable.tres")
 
 var tile = null
 var consumes_tiles = true
@@ -38,8 +39,14 @@ func set_tile(_tile):
 		self.tile.consume_tile()
 
 func set_active(active):
+	$Particles2D.set_process_material(ActiveMaterial)
+	$Particles2D.amount = 25
 	$Particles2D.emitting = active
-	print("set active")
+
+func set_selectable(selectable):
+	$Particles2D.set_process_material(SelectableMaterial)
+	$Particles2D.amount = 50
+	$Particles2D.emitting = selectable
 
 func can_move(to):
 	if not self.tile:

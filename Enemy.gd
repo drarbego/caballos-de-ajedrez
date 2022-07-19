@@ -4,12 +4,16 @@ class_name Enemy
 
 var ORIGIN = Vector2(32, 32)
 var dir = Vector2.ZERO
+var target = null
 
 func _ready():
 	self.attacks = true
 
 func set_dir(new_dir: Vector2):
 	self.dir = new_dir
+
+func set_target(new_target: Piece):
+	self.target = new_target
 
 func _draw():
 	var tip = ORIGIN + (self.dir * 64)

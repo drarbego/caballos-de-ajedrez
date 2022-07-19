@@ -27,24 +27,26 @@ func get_tile(pos: Vector2):
 	return get_node("Tiles/" + tile_name)
 
 func next_state(selected_tile):
-	if self.current_piece and self.current_piece.can_move(selected_tile.board_pos):
-		if not selected_tile.current_piece:
-			selected_tile.set_piece(self.current_piece)
-			self.current_piece.tile.select_piece()
-			$MoveTimer.set_wait_time(self.current_piece.move_time)
-			$MoveTimer.start()
-			self.set_tiles_active(false)
-		elif selected_tile.current_piece is Enemy and self.current_piece.attacks:
-				selected_tile.current_piece.on_clash(self.current_piece)
-				selected_tile.set_piece(self.current_piece)
-				self.current_piece.tile.select_piece()
-				$MoveTimer.set_wait_time(self.current_piece.move_time)
-				$MoveTimer.start()
-				self.set_tiles_active(false)
+	self.reset_graphic_state()
 
-	if selected_tile.current_piece and selected_tile.current_piece is PlayablePiece:
+	if selected_tile.current_piece is PlayablePiece:
 		self.set_tiles_active(false)
 		selected_tile.select_piece()
+		return
+
+	if not self.current_piece:
+		return
+
+	if selected_tile.is_active:
+		selected_tile.set_piece(self.current_piece)
+		$MoveTimer.set_wait_time(self.current_piece.move_time)
+		$MoveTimer.start()
+		self.set_tiles_active(false)
+		return
+
+func reset_graphic_state():
+	self.set_pieces_active(false)
+	self.set_pieces_selectable(true)
 
 func _on_MoveTimer_timeout():
 	self.move_enemies()
@@ -52,9 +54,9 @@ func _on_MoveTimer_timeout():
 	self.update_enemies_direction()
 
 func update_enemies_direction():
-	var traveler = $Pieces.get_child(0) # fix this
 	for enemy in $Enemies.get_children():
 		# follow traveler
+		var traveler = enemy.target
 		var dir = (traveler.tile.board_pos - enemy.tile.board_pos).normalized().round()
 		if abs(dir.x) == 1 and abs(dir.y) == 1:
 			dir.y = 0
@@ -67,7 +69,6 @@ func move_enemies():
 		if enemy.is_queued_for_deletion():
 			continue
 
-		enemy.tile.select_piece()
 		var next_tile = self.get_tile(enemy.tile.board_pos + enemy.dir)
 
 		if not next_tile:
@@ -84,26 +85,41 @@ func move_enemies():
 			 
 		next_tile.set_piece(enemy)
 
+
 func initialize_board():
-	# read file
+	# OWN PIECE SYMBOLS
+	# T Venado (is a Traveler that moves like a Chess King, but moves 3 tiles at a time)
+	# A Ardilla (moves like a Chess Knight)
+
+	# ENEMY SYMBOLS
+	# ! Slow Hunter
+	# @ Fast Hunter
+	# $ Archer
+
+	# read test map
+
 	var file = File.new()
 	file.open("res://test_map.txt", File.READ)
+	var traveler = null
+
 	var y = 0
 	while file.get_position() < file.get_len():
 		var x = 0
 		for c in file.get_line():
 			match c:
-				"K":
-					self.initialize_piece(Vector2(x, y), Knight, true)
 				"T":
-					self.initialize_piece(Vector2(x, y), Traveler, false)
-				"E":
+					traveler = self.initialize_piece(Vector2(x, y), Traveler, false)
+				"A":
+					self.initialize_piece(Vector2(x, y), Knight, true)
+				"!":
 					self.initialize_enemy(Vector2(x, y), Hunter)
 			x += 1
 		y += 1
 
+	self.set_enemies_target(traveler)
 	self.update_enemies_direction()
 	self.set_tiles_active(false)
+	self.reset_graphic_state()
 
 func initialize_piece(pos, piece_class, consumes_tiles): # fix consumes_tiles
 	var tile = self.get_tile(pos) 
@@ -112,6 +128,8 @@ func initialize_piece(pos, piece_class, consumes_tiles): # fix consumes_tiles
 	tile.set_piece(piece)
 	tile.current_piece = piece # fix this hack
 
+	return piece
+
 func initialize_enemy(pos, piece_class):
 	var tile = self.get_tile(pos) 
 	var piece = piece_class.instance().init(self, tile, false)
@@ -119,13 +137,25 @@ func initialize_enemy(pos, piece_class):
 	tile.set_piece(piece)
 	tile.current_piece = piece # fix this hack
 
+	return piece
+
+# TILES
 func set_tiles_active(active):
 	for tile in $Tiles.get_children():
 		tile.is_active = active
 
+# OWN PIECES
 func set_pieces_active(active):
 	for piece in $Pieces.get_children():
 		piece.set_active(active)
+
+func set_pieces_selectable(selectable):
+	for piece in $Pieces.get_children():
+		piece.set_selectable(selectable)
+
+func set_enemies_target(target):
+	for piece in $Enemies.get_children():
+		piece.set_target(target)
 
 func game_over():
 	self.set_tiles_active(false)

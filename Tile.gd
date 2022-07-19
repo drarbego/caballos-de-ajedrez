@@ -39,9 +39,7 @@ func select_piece():
 	if not self.current_piece:
 		return
 
-	# self.board.set_tiles_active(false)
-	# self.board.set_pieces_active(false)
-	# self.current_piece.set_active(true)
+	self.current_piece.set_active(true)
 
 	for move in self.current_piece.moves:
 		var tile = self.board.get_tile(self.board_pos + move)
