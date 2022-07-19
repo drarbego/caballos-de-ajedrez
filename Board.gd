@@ -26,11 +26,10 @@ func get_tile(pos: Vector2):
 
 	return get_node("Tiles/" + tile_name)
 
-func next_state(selected_tile):
-	self.reset_graphic_state()
-
+func on_tile_pressed(selected_tile):
 	if selected_tile.current_piece is PlayablePiece:
 		self.set_tiles_active(false)
+		self.set_pieces_selectable(false)
 		selected_tile.select_piece()
 		return
 
@@ -38,11 +37,17 @@ func next_state(selected_tile):
 		return
 
 	if selected_tile.is_active:
-		selected_tile.set_piece(self.current_piece)
-		$MoveTimer.set_wait_time(self.current_piece.move_time)
-		$MoveTimer.start()
-		self.set_tiles_active(false)
+		self.next_board_state(selected_tile)
 		return
+
+func next_board_state(selected_tile):
+	self.reset_graphic_state()
+
+	selected_tile.set_piece(self.current_piece)
+	$MoveTimer.set_wait_time(self.current_piece.move_time)
+	$MoveTimer.start()
+	self.set_tiles_active(false)
+	print("next board state")
 
 func reset_graphic_state():
 	self.set_pieces_active(false)

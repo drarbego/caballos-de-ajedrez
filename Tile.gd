@@ -32,7 +32,7 @@ func set_piece(piece):
 		child.on_piece_landed(piece)
 
 func _on_pressed():
-	self.board.next_state(self)
+	self.board.on_tile_pressed(self)
 
 func select_piece():
 	# makes available tiles for piece active
