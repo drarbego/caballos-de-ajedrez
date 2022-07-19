@@ -10,6 +10,7 @@ var board = null
 export var moves := [Vector2.ZERO]
 export var move_time := 0.5
 export var attacks = false
+export var TYPE = ""
 
 # state
 var is_moving = false

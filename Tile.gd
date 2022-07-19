@@ -34,6 +34,9 @@ func set_piece(piece):
 func _on_pressed():
 	self.board.on_tile_pressed(self)
 
+func _on_mouse_entered():
+	self.board.on_tile_mouse_entered(self)
+
 func select_piece():
 	# makes available tiles for piece active
 	if not self.current_piece:
@@ -65,6 +68,14 @@ func _ready():
 
 func consume_tile():
 	self.is_active = false
+
+func is_adjacent_to(tile):
+	return (
+		tile.board_pos + Vector2.UP == self.board_pos or
+		tile.board_pos + Vector2.DOWN == self.board_pos or
+		tile.board_pos + Vector2.LEFT == self.board_pos or
+		tile.board_pos + Vector2.RIGHT == self.board_pos
+	)
 
 func _process(delta):
 	$TextureButton.modulate = Color.white if self.is_active else Color.darkgray

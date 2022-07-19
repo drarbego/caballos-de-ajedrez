@@ -29,4 +29,5 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_mouse_entered"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]

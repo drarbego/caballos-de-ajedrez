@@ -6,11 +6,15 @@ const Tile = preload("res://Tile.tscn")
 const Switch = preload("res://Switch.tscn")
 const Hunter = preload("res://Hunter.tscn")
 
-var board_tiles = Vector2(8, 8)
+var board_tiles := Vector2(8, 8)
 
 var current_piece = null
 
-var is_player_turn = true
+var is_player_turn := true
+var is_selecting_tiles := false
+const MAX_TRAVELER_MOVES := 2
+var traveler_moves_left := MAX_TRAVELER_MOVES
+var tiles_stack = []
 
 
 func _ready():
@@ -31,6 +35,10 @@ func on_tile_pressed(selected_tile):
 		self.set_tiles_active(false)
 		self.set_pieces_selectable(false)
 		selected_tile.select_piece()
+		if selected_tile.current_piece.TYPE == "Traveler":
+			self.selecting_tiles(selected_tile.current_piece)
+		else:
+			self.cancel_selecting_tiles()
 		return
 
 	if not self.current_piece:
@@ -38,6 +46,37 @@ func on_tile_pressed(selected_tile):
 
 	if selected_tile.is_active:
 		self.next_board_state(selected_tile)
+		return
+
+func selecting_tiles(traveler):
+	self.set_tiles_active(false)
+	self.is_selecting_tiles = true
+	self.traveler_moves_left = self.MAX_TRAVELER_MOVES
+	self.tiles_stack = [traveler.tile]
+
+func cancel_selecting_tiles():
+	self.is_selecting_tiles = false
+
+func on_tile_mouse_entered(tile):
+	if not self.is_selecting_tiles:
+		return
+
+	if self.current_piece.tile == tile:
+		return
+
+	if tile == self.tiles_stack.back():
+		self.tiles_stack.pop_back()
+		tile.set_active(false)
+		self.traveler_moves_left = clamp(self.traveler_moves_left + 1, 0, self.MAX_TRAVELER_MOVES)
+		return
+
+	if self.traveler_moves_left == 0:
+		return
+
+	if not self.tiles_stack or tile.is_adjacent_to(self.tiles_stack.back()):
+		self.tiles_stack.append(tile)
+		tile.set_active(true)
+		self.traveler_moves_left = clamp(self.traveler_moves_left - 1, 0, self.MAX_TRAVELER_MOVES)
 		return
 
 func next_board_state(selected_tile):

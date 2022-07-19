@@ -10,6 +10,7 @@
 [node name="Traveler" instance=ExtResource( 1 )]
 script = ExtResource( 5 )
 moves = [ Vector2( -1, 0 ), Vector2( 1, 0 ), Vector2( 0, -1 ), Vector2( 0, 1 ) ]
+TYPE = "Traveler"
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 2 )
