@@ -30,55 +30,6 @@ func get_tile(pos: Vector2):
 
 	return get_node("Tiles/" + tile_name)
 
-func on_tile_pressed(selected_tile):
-	if selected_tile.current_piece is PlayablePiece:
-		self.set_tiles_active(false)
-		self.set_pieces_selectable(false)
-		selected_tile.select_piece()
-		if selected_tile.current_piece.TYPE == "Traveler":
-			self.selecting_tiles(selected_tile.current_piece)
-		else:
-			self.cancel_selecting_tiles()
-		return
-
-	if not self.current_piece:
-		return
-
-	if selected_tile.is_active:
-		self.next_board_state(selected_tile)
-		return
-
-func selecting_tiles(traveler):
-	self.set_tiles_active(false)
-	self.is_selecting_tiles = true
-	self.traveler_moves_left = self.MAX_TRAVELER_MOVES
-	self.tiles_stack = [traveler.tile]
-
-func cancel_selecting_tiles():
-	self.is_selecting_tiles = false
-
-func on_tile_mouse_entered(tile):
-	if not self.is_selecting_tiles:
-		return
-
-	if self.current_piece.tile == tile:
-		return
-
-	if tile == self.tiles_stack.back():
-		self.tiles_stack.pop_back()
-		tile.set_active(false)
-		self.traveler_moves_left = clamp(self.traveler_moves_left + 1, 0, self.MAX_TRAVELER_MOVES)
-		return
-
-	if self.traveler_moves_left == 0:
-		return
-
-	if not self.tiles_stack or tile.is_adjacent_to(self.tiles_stack.back()):
-		self.tiles_stack.append(tile)
-		tile.set_active(true)
-		self.traveler_moves_left = clamp(self.traveler_moves_left - 1, 0, self.MAX_TRAVELER_MOVES)
-		return
-
 func next_board_state(selected_tile):
 	self.reset_graphic_state()
 
@@ -86,7 +37,6 @@ func next_board_state(selected_tile):
 	$MoveTimer.set_wait_time(self.current_piece.move_time)
 	$MoveTimer.start()
 	self.set_tiles_active(false)
-	print("next board state")
 
 func reset_graphic_state():
 	self.set_pieces_active(false)
@@ -105,7 +55,6 @@ func update_enemies_direction():
 		if abs(dir.x) == 1 and abs(dir.y) == 1:
 			dir.y = 0
 		enemy.set_dir(dir)
-
 
 func move_enemies():
 	self.is_player_turn = false
@@ -129,6 +78,16 @@ func move_enemies():
 			 
 		next_tile.set_piece(enemy)
 
+func crosses_enemy(from_tile, to_tile):
+	var current_tile = from_tile
+	while (current_tile and current_tile != to_tile):
+		if current_tile != from_tile and current_tile.current_piece:
+			return true
+
+		var dir = (to_tile.board_pos - current_tile.board_pos).normalized().round()
+		current_tile = self.get_tile(current_tile.board_pos + dir)
+
+	return false
 
 func initialize_board():
 	# OWN PIECE SYMBOLS

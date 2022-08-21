@@ -32,13 +32,21 @@ func set_piece(piece):
 		child.on_piece_landed(piece)
 
 func _on_pressed():
-	self.board.on_tile_pressed(self)
+	if self.current_piece is PlayablePiece:
+		self.board.set_tiles_active(false)
+		self.board.set_pieces_selectable(false)
+		self.select_piece()
+		return
 
-func _on_mouse_entered():
-	self.board.on_tile_mouse_entered(self)
+	if not self.board.current_piece:
+		return
+
+	if self.is_active:
+		self.board.next_board_state(self)
+		return
 
 func select_piece():
-	# makes available tiles for piece active
+	# makes the available tiles of the current piece active
 	if not self.current_piece:
 		return
 
@@ -47,7 +55,13 @@ func select_piece():
 	for move in self.current_piece.moves:
 		var tile = self.board.get_tile(self.board_pos + move)
 		if tile:
-			tile.set_active(true)
+			if self.current_piece.TYPE == "Traveler":
+				if not tile.current_piece and not self.board.crosses_enemy(self, tile):
+					tile.set_active(true)
+			else:
+				tile.set_active(true)
+				if tile.current_piece and tile.current_piece is Enemy and self.current_piece.attacks:
+					tile.set_active(true) # set attackable
 
 	self.board.current_piece = self.current_piece
 

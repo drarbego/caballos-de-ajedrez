@@ -9,7 +9,7 @@
 
 [node name="Traveler" instance=ExtResource( 1 )]
 script = ExtResource( 5 )
-moves = [ Vector2( -1, 0 ), Vector2( 1, 0 ), Vector2( 0, -1 ), Vector2( 0, 1 ) ]
+moves = [ Vector2( -1, 0 ), Vector2( 1, 0 ), Vector2( 0, -1 ), Vector2( 0, 1 ), Vector2( -1, -1 ), Vector2( 1, -1 ), Vector2( -1, 1 ), Vector2( 1, 1 ), Vector2( -2, 0 ), Vector2( 2, 0 ), Vector2( 0, -2 ), Vector2( 0, 2 ) ]
 TYPE = "Traveler"
 
 [node name="Sprite" parent="." index="0"]
