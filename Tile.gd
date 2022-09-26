@@ -28,9 +28,6 @@ func set_piece(piece):
 	piece.move_to_tile(self)
 	piece.set_tile(self)
 
-	for child in $Content.get_children():
-		child.on_piece_landed(piece)
-
 func _on_pressed():
 	if self.current_piece is PlayablePiece:
 		self.board.set_tiles_active(false)
@@ -100,3 +97,12 @@ func set_content(node_content):
 		child.queue_free()
 
 	$Content.add_child(node_content)
+
+func has_content():
+	return $Content.get_child_count() > 0
+
+func reset():
+	self.current_piece = null
+	self.is_active = true
+	for child in $Content.get_children():
+		child.queue_free()

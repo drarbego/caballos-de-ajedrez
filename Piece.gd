@@ -27,12 +27,15 @@ func move_to_tile(new_tile):
 	self.is_moving = true
 	$AnimationPlayer.play("walk")
 	$Tween.interpolate_property(self, "position", self.position, new_tile.position, move_time)
-	$Tween.interpolate_callback(self,  move_time, "stop_moving")
+	$Tween.interpolate_callback(self,  move_time, "stop_moving", new_tile)
 	$Tween.start()
 
-func stop_moving():
+func stop_moving(new_tile):
 	self.is_moving = false
 	$AnimationPlayer.play("idle")
+
+	for content in new_tile.get_node("Content").get_children():
+		content.on_piece_landed(self)
 
 func set_tile(_tile):
 	self.tile = _tile

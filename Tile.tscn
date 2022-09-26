@@ -6,7 +6,9 @@
 [sub_resource type="Theme" id=1]
 Label/colors/font_color = Color( 0, 0, 0, 1 )
 
-[node name="Tile" type="Node2D" groups=["tiles"]]
+[node name="Tile" type="Node2D" groups=[
+"tiles",
+]]
 script = ExtResource( 2 )
 
 [node name="TextureButton" type="TextureButton" parent="."]
@@ -28,5 +30,4 @@ theme = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
 [connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]
