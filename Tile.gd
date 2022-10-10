@@ -14,6 +14,10 @@ func init(_board, x, y):
 
 	return self
 
+func get_neighbor_tile_at(offset: Vector2):
+	var pos = self.board_pos + offset
+	return self.board.get_tile(pos)
+
 func set_piece(piece):
 	if self.current_piece and piece:
 		if self.current_piece.has_method("on_clash"):
@@ -77,9 +81,6 @@ func set_active(active):
 func _ready():
 	self.position = self.board_pos * tile_size
 
-func consume_tile():
-	self.is_active = false
-
 func is_adjacent_to(tile):
 	return (
 		tile.board_pos + Vector2.UP == self.board_pos or
@@ -100,6 +101,9 @@ func set_content(node_content):
 
 func has_content():
 	return $Content.get_child_count() > 0
+
+func has_enemy():
+	return self.current_piece is Enemy
 
 func reset():
 	self.current_piece = null
