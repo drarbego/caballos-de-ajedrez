@@ -9,5 +9,6 @@ func init(_file_name, _board):
 
 	return self
 
-func on_piece_landed(_piece):
-	self.board.initialize_board(self.file_name)
+func on_piece_landed(piece):
+	if not piece is Enemy:
+		self.board.initialize_board(self.file_name)
