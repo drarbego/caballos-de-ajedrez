@@ -5,7 +5,6 @@ var ActiveMaterial = preload("res://materials/active.tres")
 var SelectableMaterial = preload("res://materials/selectable.tres")
 
 var tile = null
-var consumes_tiles = true
 var board = null
 export var moves := [Vector2.ZERO]
 export var move_time := 0.5
@@ -15,11 +14,10 @@ export var TYPE = ""
 # state
 var is_moving = false
 
-func init(_board, _tile,  _consumes_tiles):
+func init(_board, _tile):
 	self.board = _board
 	self.tile = _tile
 	$Particles2D.emitting = false
-	self.consumes_tiles = _consumes_tiles
 
 	return self
 
@@ -39,8 +37,6 @@ func stop_moving(new_tile):
 
 func set_tile(_tile):
 	self.tile = _tile
-	if self.consumes_tiles:
-		self.tile.consume_tile()
 
 func set_active(active):
 	$Particles2D.set_process_material(ActiveMaterial)
